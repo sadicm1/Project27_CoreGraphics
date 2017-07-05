@@ -28,7 +28,7 @@ class ViewController: UIViewController {
     currentDrawingNumber += 1
     
     // Max number of drawings is 5. After 5 it is reset to 0
-    if currentDrawingNumber > 5 {
+    if currentDrawingNumber > 6 {
       currentDrawingNumber = 0
     }
     
@@ -51,6 +51,8 @@ class ViewController: UIViewController {
       
     case 5:
       drawImageAndText()
+    case 6:
+      drawAnInterstingShape()
       
     default:
       break
@@ -196,6 +198,45 @@ class ViewController: UIViewController {
     
     imageView.image = img
   }
+  
+  private func drawAnInterstingShape() {
+    let renderer = UIGraphicsImageRenderer(size: CGSize(width: 512, height: 512))
+    
+    let img = renderer.image { ctx in
+      
+      let rotationAmount: CGFloat = 16
+      var sideLength: CGFloat = 400
+      let mouseScale: CGFloat = 7
+      let numberOfSquares = 20
+      
+      ctx.cgContext.setLineWidth(2)
+      ctx.cgContext.setStrokeColor(UIColor.black.cgColor)
+      ctx.cgContext.translateBy(x: 256, y: 256)
+      
+      for _ in 0..<numberOfSquares {
+        
+        let size = CGSize(width: sideLength, height: sideLength)
+        let origin = CGPoint(x: -sideLength / 2.0, y: -sideLength / 2.0)
+        
+        ctx.cgContext.addRect(CGRect(origin: origin, size: size))
+        
+        let mouse = UIImage(named: "mouse")!
+        let mouseSize = CGSize(width: size.width / mouseScale, height: size.height / mouseScale)
+        mouse.draw(in: CGRect(origin: origin, size: mouseSize))
+        
+        ctx.cgContext.rotate(by: CGFloat.pi / rotationAmount)
+
+        sideLength *= 0.85
+
+      }
+      
+      ctx.cgContext.strokePath()
+    }
+    
+    imageView.image = img
+  
+  }
+  
 
 }
 
